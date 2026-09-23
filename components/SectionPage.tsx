@@ -1,0 +1,1 @@
+export default function SectionPage({title,desc,children}:{title:string,desc:string,children?:React.ReactNode}){return <><div className="top"><div><div className="title">{title}</div><div className="muted">{desc}</div></div></div>{children??<div className="card">Módulo preparado para conectar con Supabase.</div>}</>}

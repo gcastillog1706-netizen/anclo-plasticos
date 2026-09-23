@@ -1,0 +1,1 @@
+import SectionPage from '@/components/SectionPage'; export default function Page(){return <SectionPage title="Materiales y lotes" desc="Virgen, reciclado, pigmento, liberación, consumo y trazabilidad"/>}
