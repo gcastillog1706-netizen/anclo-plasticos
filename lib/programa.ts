@@ -1,0 +1,12 @@
+export type ProgramaRow={id?:string;maquina:string;producto:string;orden:string;cantidad:number|null;estatus:string;molde?:string;material?:string;kg_liberados?:number|null;lote?:string;inicio?:string;turno?:string;prioridad?:string;observaciones?:string};
+export const seedPrograma:ProgramaRow[]=[
+{maquina:'IP-035',producto:'HS01',orden:'900',cantidad:900,estatus:'TERMINADO'},{maquina:'IP-035',producto:'PCC01-PCC04',orden:'',cantidad:null,estatus:'SE MONTA HOY'},{maquina:'IP-035',producto:'PCC01-PCC04 UL',orden:'',cantidad:null,estatus:'EN PROCESO'},{maquina:'IP-035',producto:'GRAPA',orden:'',cantidad:null,estatus:'TERMINADO'},
+{maquina:'IP-039',producto:'ACT370-4PRO',orden:'360',cantidad:360,estatus:'EN PROCESO'},{maquina:'IP-039',producto:'ACN370-4PRO',orden:'460',cantidad:460,estatus:'PENDIENTE'},{maquina:'IP-039',producto:'SACN370-4PROA',orden:'180',cantidad:180,estatus:'PENDIENTE'},
+{maquina:'EP-038',producto:'CGN34T',orden:'6450',cantidad:6450,estatus:'INCIDENCIA / REPARACION'},{maquina:'EP-038',producto:'CGN12T',orden:'4400',cantidad:4400,estatus:'INCIDENCIA / REPARACION'},
+{maquina:'EP-048',producto:'AG14',orden:'1570000',cantidad:1570000,estatus:'EN PROCESO'},{maquina:'EP-041',producto:'FD1A',orden:'4800',cantidad:4800,estatus:'TERMINADO'},
+{maquina:'IP-002',producto:'DE10',orden:'',cantidad:null,estatus:'SIN MATERIAL'},{maquina:'IP-002',producto:'DE23',orden:'',cantidad:null,estatus:'SE MONTA HOY'},
+{maquina:'IP-005',producto:'HLR34S',orden:'',cantidad:null,estatus:'TERMINADO'},{maquina:'IP-005',producto:'HLR34E',orden:'',cantidad:null,estatus:'SIN MATERIAL'},
+{maquina:'IP-006',producto:'CTH',orden:'20000',cantidad:20000,estatus:'EN PROCESO'},{maquina:'EP-007',producto:'HLR200E',orden:'1000',cantidad:1000,estatus:'PENDIENTE'},
+{maquina:'EP-010',producto:'HLR114',orden:'10000',cantidad:10000,estatus:'TERMINADO'},{maquina:'EP-011',producto:'HLR100 S Y E',orden:'15000',cantidad:15000,estatus:'EN PROCESO'},
+{maquina:'EP-008',producto:'HLR400 S',orden:'200',cantidad:200,estatus:'TERMINADO'},{maquina:'IP-032',producto:'AG14',orden:'500000',cantidad:500000,estatus:'EN PROCESO'},{maquina:'IP-001',producto:'FE3412',orden:'200',cantidad:200,estatus:'SE MONTA HOY'}];
+export const estadoClase=(e:string)=>{e=e.toUpperCase();if(e.includes('PROCESO'))return 'ok';if(e.includes('INCID')||e.includes('REPAR')||e.includes('SIN MATERIAL'))return 'bad';if(e.includes('MONTA')||e.includes('PEND'))return 'warn';if(e.includes('TERMIN'))return 'done';return 'neutral'};
