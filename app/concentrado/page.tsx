@@ -1,2 +1,5 @@
-import SectionPage from '@/components/SectionPage'; import ProductionTable from '@/components/ProductionTable';
-export default function Page(){return <SectionPage title="Concentrado diario" desc="Día + Noche · producción, materiales, trazabilidad y avance"><ProductionTable/></SectionPage>}
+'use client';
+import ProductionTable from '@/components/ProductionTable';
+export default function Page(){
+ const csv=()=>{const t=document.querySelector('table');if(!t)return;const lines=Array.from(t.querySelectorAll('tr')).map(tr=>Array.from(tr.querySelectorAll('th,td')).map(c=>'"'+(c.textContent||'').replaceAll('"','""')+'"').join(','));const blob=new Blob(['\ufeff'+lines.join('\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='concentrado-diario.csv';a.click();URL.revokeObjectURL(a.href)};
+ return <><div className="top"><div><div className="title">Concentrado diario</div><div className="muted">Día + Noche · producción, materiales, trazabilidad y avance</div></div><div className="actions"><button className="btn secondary" onClick={csv}>Descargar Excel/CSV</button><button className="btn secondary" onClick={()=>window.print()}>Guardar PDF / Imprimir</button></div></div><section className="section"><ProductionTable/></section></>}

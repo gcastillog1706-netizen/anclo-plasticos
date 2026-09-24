@@ -1,0 +1,8 @@
+'use client';
+import {useState} from 'react';
+type Person={id:string;numero:string;nombre:string;puesto:string;activo:boolean};
+export default function Page(){
+ const [rows,setRows]=useState<Person[]>([]);
+ const add=()=>setRows(r=>[...r,{id:crypto.randomUUID(),numero:'',nombre:'',puesto:'',activo:true}]);
+ const upd=(id:string,k:keyof Person,v:any)=>setRows(r=>r.map(x=>x.id===id?{...x,[k]:v}:x));
+ return <><div className="top"><div><div className="title">Personal</div><div className="muted">Catálogo de operadores y personal de producción</div></div><button className="btn" onClick={add}>+ Agregar personal</button></div><section className="section"><div className="table-wrap"><table className="compact"><thead><tr><th>No. trabajador</th><th>Nombre</th><th>Puesto / función</th><th>Estatus</th><th></th></tr></thead><tbody>{rows.length===0?<tr><td colSpan={5} className="muted">Aún no hay personal capturado. Usa “+ Agregar personal”.</td></tr>:rows.map(x=><tr key={x.id}><td><input className="cell" value={x.numero} onChange={e=>upd(x.id,'numero',e.target.value)}/></td><td><input className="cell" value={x.nombre} onChange={e=>upd(x.id,'nombre',e.target.value)}/></td><td><input className="cell" value={x.puesto} onChange={e=>upd(x.id,'puesto',e.target.value)}/></td><td><select className="cell" value={x.activo?'ACTIVO':'INACTIVO'} onChange={e=>upd(x.id,'activo',e.target.value==='ACTIVO')}><option>ACTIVO</option><option>INACTIVO</option></select></td><td><button className="btn secondary" onClick={()=>setRows(r=>r.filter(y=>y.id!==x.id))}>Eliminar</button></td></tr>)}</tbody></table></div></section></>}
