@@ -11,3 +11,7 @@
 - Los cambios de estándares se guardan localmente en esta fase y alimentan nuevas planeaciones/Gantt.
 
 No incluye migración SQL nueva. Persistencia definitiva en Supabase queda para la siguiente fase.
+
+## V8.1 - Corrección de compilación Vercel
+- Tipado explícito `string[]` para productos, moldes y máquinas compatibles en Planeación.
+- Corrige el error TypeScript `unknown is not assignable to string` reportado por Vercel en `app/planeacion/page.tsx`.
