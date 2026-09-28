@@ -1,0 +1,23 @@
+export type MachineMaster={numero:string;marca:string;modelo:string;tonelaje:string;estado:string};
+export const machineMaster:MachineMaster[]=[
+{numero:'IP-003',marca:'Toshiba',modelo:'Inyectora de plástico',tonelaje:'',estado:'ACTIVA'},
+{numero:'IP-004',marca:'Toshiba',modelo:'Inyectora de plástico',tonelaje:'',estado:'ACTIVA'},
+{numero:'IP-002',marca:'Toshiba',modelo:'Inyectora de plástico',tonelaje:'',estado:'ACTIVA'},
+{numero:'IP-005',marca:'Toshiba',modelo:'Inyectora de plástico',tonelaje:'',estado:'ACTIVA'},
+{numero:'IP-006',marca:'Stokes',modelo:'Inyectora de plástico',tonelaje:'',estado:'ACTIVA'},
+{numero:'EP-010',marca:'Boy',modelo:'Inyectora de plástico',tonelaje:'',estado:'ACTIVA'},
+{numero:'EP-011',marca:'Toshiba',modelo:'Inyectora de plástico',tonelaje:'',estado:'ACTIVA'},
+{numero:'EP-008',marca:'Engel',modelo:'Engel 80',tonelaje:'80',estado:'ACTIVA'},
+{numero:'EP-007',marca:'Battenfeld',modelo:'Inyectora de plástico',tonelaje:'',estado:'ACTIVA'},
+{numero:'EP-040',marca:'Nissei',modelo:'',tonelaje:'',estado:'ACTIVA'},
+{numero:'IP-001',marca:'Toshiba',modelo:'Inyectora de plástico',tonelaje:'',estado:'ACTIVA'},
+{numero:'ARBURG',marca:'Arburg',modelo:'',tonelaje:'',estado:'ACTIVA'},
+{numero:'IP-032',marca:'Bole',modelo:'Bole 160',tonelaje:'160',estado:'ACTIVA'},
+{numero:'IP-035',marca:'Bole',modelo:'Bole 200',tonelaje:'200',estado:'ACTIVA'},
+{numero:'IP-039',marca:'LS',modelo:'Eco Smart',tonelaje:'',estado:'ACTIVA'},
+{numero:'EP-038',marca:'Bole',modelo:'Bole 230',tonelaje:'230',estado:'ACTIVA'},
+{numero:'EP-048',marca:'Bole',modelo:'Bole 200',tonelaje:'200',estado:'ACTIVA'},
+{numero:'IP-040',marca:'Yizumi',modelo:'Yizumi 260',tonelaje:'260',estado:'ACTIVA'},
+{numero:'IP-034',marca:'Bole',modelo:'Bole 300',tonelaje:'300',estado:'ACTIVA'},
+{numero:'EP-041',marca:'Nissei',modelo:'Inyectora de plástico',tonelaje:'',estado:'ACTIVA'},
+];
