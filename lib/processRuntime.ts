@@ -38,3 +38,11 @@ export function addProcessStandard(row:ProcessStandard){
  localStorage.setItem('anclo-process-additions-v1',JSON.stringify(all));
  window.dispatchEvent(new Event('anclo-process-updated'));
 }
+
+export function deleteProcessStandard(row:ProcessStandard){
+ if(row.custom){
+  const all=JSON.parse(localStorage.getItem('anclo-process-additions-v1')||'[]') as ProcessStandard[];
+  localStorage.setItem('anclo-process-additions-v1',JSON.stringify(all.filter(x=>processKey(x)!==processKey(row))));
+ }else saveProcessOverride(row,{activo:false});
+ window.dispatchEvent(new Event('anclo-process-updated'));
+}
