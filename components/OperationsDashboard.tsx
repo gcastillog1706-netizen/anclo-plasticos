@@ -1,6 +1,6 @@
 'use client';
 import {useEffect,useMemo,useState} from 'react';
-import {seedPrograma,estadoClase} from '@/lib/programa';
+import {estadoClase} from '@/lib/programa';
 import {machineMaster} from '@/lib/machines';
 
 type Zone='left'|'right'|'bottom';
@@ -25,8 +25,8 @@ function Machine({m,rows,prod,edit,onDragStart}:{m:string;rows:Plan[];prod:Prod[
   {pendientes>0&&<em>+ {pendientes} pendiente(s) en cola</em>}</div></button>
 }
 export default function OperationsDashboard(){
- const [layout,setLayout]=useState<Layout>(defaultLayout),[edit,setEdit]=useState(false),[drag,setDrag]=useState<string|null>(null),[rows,setRows]=useState<Plan[]>(seedPrograma as Plan[]),[prod,setProd]=useState<Prod[]>([]),[currentWeek,setCurrentWeek]=useState(39);
- useEffect(()=>{try{const l=localStorage.getItem('anclo-layout-v1');if(l)setLayout(JSON.parse(l));const p=JSON.parse(localStorage.getItem('anclo-planeacion-v4')||'[]');if(p.length)setRows(p);setProd(JSON.parse(localStorage.getItem('anclo-produccion-v1')||'[]'));setCurrentWeek(Number(localStorage.getItem('anclo-current-week')||39))}catch{}},[]);
+ const [layout,setLayout]=useState<Layout>(defaultLayout),[edit,setEdit]=useState(false),[drag,setDrag]=useState<string|null>(null),[rows,setRows]=useState<Plan[]>([]),[prod,setProd]=useState<Prod[]>([]),[currentWeek,setCurrentWeek]=useState(40);
+ useEffect(()=>{try{const l=localStorage.getItem('anclo-layout-v1');if(l)setLayout(JSON.parse(l));const p=JSON.parse(localStorage.getItem('anclo-planeacion-v9')||'[]');if(p.length)setRows(p);setProd(JSON.parse(localStorage.getItem('anclo-produccion-v2')||'[]'));setCurrentWeek(Number(localStorage.getItem('anclo-current-week')||40))}catch{}},[]);
  const saveLayout=(l:Layout)=>{setLayout(l);localStorage.setItem('anclo-layout-v1',JSON.stringify(l))};
  const drop=(zone:Zone,before?:string)=>{if(!drag)return;const next:{left:string[];right:string[];bottom:string[]}={left:layout.left.filter(x=>x!==drag),right:layout.right.filter(x=>x!==drag),bottom:layout.bottom.filter(x=>x!==drag)};const a=next[zone];const i=before?a.indexOf(before):-1;i>=0?a.splice(i,0,drag):a.push(drag);saveLayout(next);setDrag(null)};
  const activeWeek=currentWeek; const weekRows=rows.filter(r=>(r.semana||0)===activeWeek); const all=[...layout.left,...layout.bottom,...layout.right]; const current=all.map(m=>({m,r:currentFor(m,weekRows)})); const prodN=current.filter(x=>x.r?.estatus==='EN PROCESO').length,par=current.filter(x=>x.r&&(x.r.estatus.includes('INCIDENCIA')||x.r.estatus==='SIN MATERIAL')).length,prep=current.filter(x=>x.r?.estatus==='SE MONTA HOY').length;
