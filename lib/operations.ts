@@ -3,7 +3,7 @@ export type Program={id:string;nombre:string;tipo:ProgramType;fechaRecibido:stri
 export type ProgramRevision={id:string;programId:string;numero:number;tipo:'LIBERACION'|'REPROGRAMACION';fecha:string;orders:Order[];allocations:Allocation[]};
 export type OrderType='OFICIAL'|'INTERNA';
 export type Order={id:string;programId:string;folioInterno:string;tipoOrden:OrderType;op:string;motivoSinOp:string;producto:string;cantidad:number|null;fechaCompromiso:string;virgenKg:number|null;loteVirgen:string;recicladoKg:number|null;loteReciclado:string;pigmento:string;pigmentoKg:number|null;lotePigmento:string};
-export type Allocation={id:string;orderId:string;semana:number;producto:string;molde:string;moldeDescripcion:string;maquina:string;cantidad:number|null;ciclo:number|null;cavidades:number|null;pzCiclo:number|null;secuencia:number};
+export type Allocation={id:string;orderId:string;semana:number;producto:string;molde:string;moldeDescripcion:string;maquina:string;cantidad:number|null;ciclo:number|null;cavidades:number|null;pzCiclo:number|null;secuencia:number;inicioDeseado?:string};
 export type Production={id:string;allocationId:string;orderId:string;fecha:string;turno:'DÍA'|'NOCHE';operadores:string;kg:number|null;piezas:number|null;ciclo:number|null;cavidades:number|null;merma:number|null;purga:number|null;horas:number|null;resultado:'PRODUJO'|'NO PRODUJO';motivo:string;comentario:string};
 export const KEYS={programs:'anclo-programs-v10',orders:'anclo-orders-v10',allocations:'anclo-allocations-v10',production:'anclo-production-v10',revisions:'anclo-program-revisions-v1'};
 export const read=<T,>(key:string,fallback:T):T=>{if(typeof window==='undefined')return fallback;try{return JSON.parse(localStorage.getItem(key)||'') as T}catch{return fallback}};
@@ -21,7 +21,7 @@ export const scheduleAllocations=(allocations:Allocation[],program?:Program|null
  [...allocations].sort((a,b)=>(a.semana-b.semana)||(a.secuencia-b.secuencia)).forEach(a=>{
   if(!a.maquina)return; const pzh=capacityFor(a); if(!pzh||!a.cantidad)return;
   const weekOffset=Math.max(0,(a.semana-isoWeek(program?.fechaInicio||new Date().toISOString().slice(0,10)))*7);
-  const desired=new Date(base); desired.setDate(desired.getDate()+weekOffset);
+  const desired=a.inicioDeseado?new Date(a.inicioDeseado):new Date(base); if(!a.inicioDeseado) desired.setDate(desired.getDate()+weekOffset);
   const q=queues.get(a.maquina); const start=q&&q>desired?new Date(q):desired;
   const hours=a.cantidad/pzh; const end=new Date(start.getTime()+hours*3600000); queues.set(a.maquina,end);
   out.push({allocationId:a.id,machine:a.maquina,start:start.toISOString(),end:end.toISOString(),hours,pzh});
