@@ -13,7 +13,7 @@ export const isoWeek=(date:string)=>{const d=new Date(`${date}T12:00:00Z`);const
 export const nextInternalFolio=(orders:Order[],year=new Date().getFullYear())=>{const prefix=`INT-${year}-`;const nums=orders.map(o=>o.folioInterno||'').filter(x=>x.startsWith(prefix)).map(x=>Number(x.slice(prefix.length))).filter(Number.isFinite);return `${prefix}${String((nums.length?Math.max(...nums):0)+1).padStart(4,'0')}`};
 export const orderDisplay=(o:Order)=>o.op?.trim()?`${o.folioInterno} · ${o.op.trim()}`:o.folioInterno;
 
-export type ScheduleRow={allocationId:string;machine:string;start:string;end:string;hours:number;pzh:number};
+export type ScheduleRow={allocationId:string;machine:string;start:string;end:string;hours:number;pzh:number;requestedStart?:string;adjusted:boolean};
 export const capacityFor=(a:Allocation)=>a.ciclo&&a.pzCiclo?Math.floor((3600/a.ciclo)*a.pzCiclo):0;
 export const scheduleAllocations=(allocations:Allocation[],program?:Program|null):ScheduleRow[]=>{
  const base=new Date(`${program?.fechaInicio||new Date().toISOString().slice(0,10)}T00:00:00`);
@@ -24,6 +24,6 @@ export const scheduleAllocations=(allocations:Allocation[],program?:Program|null
   const desired=a.inicioDeseado?new Date(a.inicioDeseado):new Date(base); if(!a.inicioDeseado) desired.setDate(desired.getDate()+weekOffset);
   const q=queues.get(a.maquina); const start=q&&q>desired?new Date(q):desired;
   const hours=a.cantidad/pzh; const end=new Date(start.getTime()+hours*3600000); queues.set(a.maquina,end);
-  out.push({allocationId:a.id,machine:a.maquina,start:start.toISOString(),end:end.toISOString(),hours,pzh});
+  out.push({allocationId:a.id,machine:a.maquina,start:start.toISOString(),end:end.toISOString(),hours,pzh,requestedStart:a.inicioDeseado,adjusted:!!(a.inicioDeseado&&start.getTime()>desired.getTime())});
  }); return out;
 };
