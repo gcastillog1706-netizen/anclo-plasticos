@@ -1,3 +1,3 @@
-import './globals.css'; import Sidebar from '@/components/Sidebar'; import PersistenceGate from '@/components/PersistenceGate';
-export const metadata={title:'ANCLO Plásticos',description:'Control de producción de inyección'};
-export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="es"><body><PersistenceGate><div className="shell"><Sidebar/><main className="main">{children}</main></div></PersistenceGate></body></html>}
+import './globals.css'; import Sidebar from '@/components/Sidebar'; import PersistenceGate from '@/components/PersistenceGate'; import PWARegister from '@/components/PWARegister';
+export const metadata={title:'ANCLO Plásticos',description:'Control de producción de inyección',manifest:'/manifest.webmanifest',themeColor:'#243237',icons:{icon:'/icon.svg'}};
+export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="es"><body><PWARegister/><PersistenceGate><div className="shell"><Sidebar/><main className="main">{children}</main></div></PersistenceGate></body></html>}
