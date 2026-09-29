@@ -25,12 +25,16 @@ export default function PersistenceGate({children}:{children:React.ReactNode}){
    const {data,error}=await sb.from('app_persistencia').select('clave,valor,updated_at');
    if(error)throw error;
    const cloud=(data||[]) as CloudRow[];
+   const meaningful=(raw:string|null)=>{if(!raw)return false;try{const v=JSON.parse(raw);if(Array.isArray(v))return v.length>0;if(v&&typeof v==='object')return Object.keys(v).length>0;return v!==null&&v!==''}catch{return raw.trim().length>0}};
    if(cloud.length){
-    // Nube manda al abrir una nueva versión/origen. Nunca reemplazamos nube con un navegador vacío.
-    for(const r of cloud){if(!isManaged(r.clave))continue;localStorage.setItem(r.clave,JSON.stringify(r.valor));}
+    // FUSIÓN SEGURA: jamás sustituir una captura local con una copia vacía/antigua de nube.
+    // Si este navegador ya tiene datos reales, se conservan y se suben. Si está vacío, restaura nube.
+    const byKey=new Map(cloud.filter(r=>isManaged(r.clave)).map(r=>[r.clave,r]));
+    const keys=new Set([...managed(),...byKey.keys()]);
+    for(const k of keys){const local=localStorage.getItem(k),remote=byKey.get(k);if(meaningful(local)){await upsert(k,local!)}else if(remote){localStorage.setItem(k,JSON.stringify(remote.valor))}}
    }else{
     // Primera activación: migra automáticamente todo lo que exista en ESTE navegador a Supabase.
-    for(const [k,v] of Object.entries(localMap()))await upsert(k,v);
+    for(const [k,v] of Object.entries(localMap()))if(meaningful(v))await upsert(k,v);
    }
    localStorage.setItem(LAST_SYNC_KEY,new Date().toISOString()); snapshot.current=localMap();
    if(stopped)return; setState('ready');setMsg('Datos protegidos en Supabase');
