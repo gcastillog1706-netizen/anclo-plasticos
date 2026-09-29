@@ -13,17 +13,46 @@ export const isoWeek=(date:string)=>{const d=new Date(`${date}T12:00:00Z`);const
 export const nextInternalFolio=(orders:Order[],year=new Date().getFullYear())=>{const prefix=`INT-${year}-`;const nums=orders.map(o=>o.folioInterno||'').filter(x=>x.startsWith(prefix)).map(x=>Number(x.slice(prefix.length))).filter(Number.isFinite);return `${prefix}${String((nums.length?Math.max(...nums):0)+1).padStart(4,'0')}`};
 export const orderDisplay=(o:Order)=>o.op?.trim()?`${o.folioInterno} · ${o.op.trim()}`:o.folioInterno;
 
-export type ScheduleRow={allocationId:string;machine:string;start:string;end:string;hours:number;pzh:number;requestedStart?:string;adjusted:boolean};
+export type ScheduleRow={allocationId:string;machine:string;start:string;end:string;hours:number;pzh:number;requestedStart?:string;adjusted:boolean;sharedRun?:boolean;runKey?:string};
 export const capacityFor=(a:Allocation)=>a.ciclo&&a.pzCiclo?Math.floor((3600/a.ciclo)*a.pzCiclo):0;
+
+// Los HLR pueden tener dos componentes del mismo molde (Sello / Empaque) que se
+// producen en el mismo ciclo. Esta función identifica únicamente parejas HLR S/E;
+// no convierte automáticamente cualquier producto del mismo molde en una corrida compartida.
+const hlrComponent=(producto:string)=>{
+ const raw=(producto||'').toUpperCase().trim().replace(/\s+/g,' ');
+ if(!raw.startsWith('HLR'))return null;
+ if(/(?:-|\s)S$/.test(raw)||/S$/.test(raw))return {base:raw.replace(/(?:-|\s)?S$/,'').replace(/[\s-]+$/,''),component:'S'};
+ if(/(?:-|\s)E$/.test(raw)||/E$/.test(raw))return {base:raw.replace(/(?:-|\s)?E$/,'').replace(/[\s-]+$/,''),component:'E'};
+ return null;
+};
+const sharedHlrKey=(a:Allocation)=>{const h=hlrComponent(a.producto);return h&&a.maquina&&a.molde?`${a.maquina}||${a.molde}||${h.base}||${a.semana}`:null};
+
 export const scheduleAllocations=(allocations:Allocation[],program?:Program|null):ScheduleRow[]=>{
  const base=new Date(`${program?.fechaInicio||new Date().toISOString().slice(0,10)}T00:00:00`);
  const queues=new Map<string,Date>(); const out:ScheduleRow[]=[];
- [...allocations].sort((a,b)=>(a.semana-b.semana)||(a.secuencia-b.secuencia)).forEach(a=>{
-  if(!a.maquina)return; const pzh=capacityFor(a); if(!pzh||!a.cantidad)return;
+ const sorted=[...allocations].sort((a,b)=>(a.semana-b.semana)||(a.secuencia-b.secuencia));
+ const handled=new Set<string>();
+ for(const a of sorted){
+  if(handled.has(a.id)||!a.maquina)continue;
+  const pzh=capacityFor(a); if(!pzh||!a.cantidad)continue;
   const weekOffset=Math.max(0,(a.semana-isoWeek(program?.fechaInicio||new Date().toISOString().slice(0,10)))*7);
   const desired=a.inicioDeseado?new Date(a.inicioDeseado):new Date(base); if(!a.inicioDeseado) desired.setDate(desired.getDate()+weekOffset);
+  const key=sharedHlrKey(a);
+  const h=hlrComponent(a.producto);
+  const partners=key&&h?sorted.filter(x=>x.id!==a.id&&!handled.has(x.id)&&sharedHlrKey(x)===key&&hlrComponent(x.producto)?.component!==h.component&&capacityFor(x)>0&&!!x.cantidad):[];
+  const group=[a,...partners];
   const q=queues.get(a.maquina); const start=q&&q>desired?new Date(q):desired;
-  const hours=a.cantidad/pzh; const end=new Date(start.getTime()+hours*3600000); queues.set(a.maquina,end);
-  out.push({allocationId:a.id,machine:a.maquina,start:start.toISOString(),end:end.toISOString(),hours,pzh,requestedStart:a.inicioDeseado,adjusted:!!(a.inicioDeseado&&start.getTime()>desired.getTime())});
- }); return out;
+  let machineEnd=start;
+  for(const g of group){
+   const gpzh=capacityFor(g); if(!gpzh||!g.cantidad)continue;
+   const hours=g.cantidad/gpzh;
+   const end=new Date(start.getTime()+hours*3600000);
+   if(end>machineEnd)machineEnd=end;
+   out.push({allocationId:g.id,machine:g.maquina,start:start.toISOString(),end:end.toISOString(),hours,pzh:gpzh,requestedStart:g.inicioDeseado,adjusted:!!(g.inicioDeseado&&start.getTime()>new Date(g.inicioDeseado).getTime()),sharedRun:group.length>1,runKey:key||undefined});
+   handled.add(g.id);
+  }
+  queues.set(a.maquina,machineEnd);
+ }
+ return out;
 };
