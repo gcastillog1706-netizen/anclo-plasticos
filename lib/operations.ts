@@ -3,7 +3,7 @@ export type Program={id:string;nombre:string;tipo:ProgramType;fechaRecibido:stri
 export type ProgramRevision={id:string;programId:string;numero:number;tipo:'LIBERACION'|'REPROGRAMACION';fecha:string;orders:Order[];allocations:Allocation[]};
 export type OrderType='OFICIAL'|'INTERNA';
 export type Order={id:string;programId:string;folioInterno:string;tipoOrden:OrderType;op:string;motivoSinOp:string;producto:string;cantidad:number|null;fechaCompromiso:string;virgenKg:number|null;loteVirgen:string;recicladoKg:number|null;loteReciclado:string;pigmento:string;pigmentoKg:number|null;lotePigmento:string};
-export type Allocation={id:string;orderId:string;semana:number;producto:string;molde:string;moldeDescripcion:string;maquina:string;cantidad:number|null;ciclo:number|null;cavidades:number|null;pzCiclo:number|null;secuencia:number;inicioDeseado?:string};
+export type Allocation={id:string;orderId:string;semana:number;producto:string;molde:string;moldeDescripcion:string;maquina:string;cantidad:number|null;ciclo:number|null;cavidades:number|null;pzCiclo:number|null;secuencia:number;inicioDeseado?:string;unidadCantidad?:'PIEZAS'|'CIENTOS'};
 export type Production={id:string;allocationId:string;orderId:string;fecha:string;turno:'DÍA'|'NOCHE';operadores:string;supervisores?:string;kg:number|null;piezas:number|null;ciclo:number|null;cavidades:number|null;merma:number|null;purga:number|null;horas:number|null;resultado:'PRODUJO'|'NO PRODUJO';motivo:string;comentario:string};
 export const KEYS={programs:'anclo-programs-v10',orders:'anclo-orders-v10',allocations:'anclo-allocations-v10',production:'anclo-production-v10',revisions:'anclo-program-revisions-v1'};
 export const read=<T,>(key:string,fallback:T):T=>{if(typeof window==='undefined')return fallback;try{return JSON.parse(localStorage.getItem(key)||'') as T}catch{return fallback}};
@@ -15,6 +15,9 @@ export const orderDisplay=(o:Order)=>o.op?.trim()?`${o.folioInterno} · ${o.op.t
 
 export type ScheduleRow={allocationId:string;machine:string;start:string;end:string;hours:number;pzh:number;requestedStart?:string;adjusted:boolean;sharedRun?:boolean;runKey?:string};
 export const capacityFor=(a:Allocation)=>a.ciclo&&a.pzCiclo?Math.floor((3600/a.ciclo)*a.pzCiclo):0;
+// En Planeación, los cinchos se capturan en cientos. La cantidad almacenada se
+// conserva tal como la captura el usuario; para capacidad/tiempo se convierte a piezas reales.
+export const realPiecesFor=(a:Allocation)=>{const qty=a.cantidad||0;return a.unidadCantidad==='CIENTOS'?qty*100:qty};
 
 // Los HLR pueden tener dos componentes del mismo molde (Sello / Empaque) que se
 // producen en el mismo ciclo. Esta función identifica únicamente parejas HLR S/E;
@@ -46,7 +49,7 @@ export const scheduleAllocations=(allocations:Allocation[],program?:Program|null
   let machineEnd=start;
   for(const g of group){
    const gpzh=capacityFor(g); if(!gpzh||!g.cantidad)continue;
-   const hours=g.cantidad/gpzh;
+   const hours=realPiecesFor(g)/gpzh;
    const end=new Date(start.getTime()+hours*3600000);
    if(end>machineEnd)machineEnd=end;
    out.push({allocationId:g.id,machine:g.maquina,start:start.toISOString(),end:end.toISOString(),hours,pzh:gpzh,requestedStart:g.inicioDeseado,adjusted:!!(g.inicioDeseado&&start.getTime()>new Date(g.inicioDeseado).getTime()),sharedRun:group.length>1,runKey:key||undefined});

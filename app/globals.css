@@ -28,4 +28,4 @@
 @media(max-width:900px){.quick-release-row{grid-template-columns:1fr}.bottom-bank{grid-template-columns:repeat(3,260px)!important;width:max-content!important}.plant-floor{overflow:auto}}
 
 /* V10.7 - personal real en liberación */
-.quality-personnel-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.quality-personnel-grid select{min-height:118px}@media(max-width:900px){.quality-personnel-grid{grid-template-columns:1fr}}
+.quality-personnel-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.personnel-picker{display:block}.personnel-slots{display:grid;gap:7px;margin-top:6px}.personnel-slots select{width:100%;min-height:42px}.personnel-picker small{display:block;margin-top:2px}@media(max-width:900px){.quality-personnel-grid{grid-template-columns:1fr}}
