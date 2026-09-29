@@ -1,0 +1,11 @@
+# V10.6 — Liberación rápida
+- Calidad muestra tanto producción reportada como partidas planeadas pendientes.
+- Se puede capturar producción directamente desde Liberación sin pasar antes por Producción Día/Noche.
+- Fecha y turno Día/Noche obligatorios en el flujo.
+- Captura rápida: piezas producidas, lote, ciclo real, operadores y resultado.
+- PASA precarga aceptadas = producidas; rechazo se calcula automáticamente.
+- Si se libera desde Planeación, se crea el registro de Producción correspondiente para evitar doble captura.
+- LIBERAR Y SIGUIENTE facilita recorrer partidas.
+- El avance oficial sigue basado en piezas aceptadas por Calidad.
+- Ajuste visual del banco inferior de Monitoreo: EP-040, IP-001 y ARBURG más anchas y pasillo más corto.
+- No requiere SQL nuevo.
