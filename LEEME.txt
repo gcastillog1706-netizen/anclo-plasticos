@@ -1,15 +1,16 @@
-PARCHE CALIDAD - LIBERACION RAPIDA
+PARCHE: Cambio de máquina/molde real en Calidad > Liberación rápida
 
-Cambios:
-- Una sola fila por partida activa en Liberacion rapida.
-- Si hay varios registros previos de la misma partida, ya no aparecen duplicados.
-- Acum. anterior se obtiene de las piezas aceptadas historicas de la partida.
-- Nueva produccion inicia siempre en 0/vacio.
-- Cada nueva captura crea un registro de produccion nuevo; no sobrescribe una produccion anterior.
-- Molde / Herramental muestra numero de molde y debajo la descripcion disponible del maestro/configuracion.
-- Se conservan hasta 3 operadores y supervisor diario.
-
-Archivos a reemplazar:
+Reemplazar:
 - app/calidad/page.tsx
 
-No requiere SQL.
+Cambios:
+- Cada fila permite seleccionar Máquina real.
+- Muestra Máquina planeada para conservar comparación.
+- Máquina real se limita a configuraciones registradas del producto/molde.
+- Permite seleccionar Molde real y ajusta automáticamente máquinas compatibles.
+- Al cambiar combinación se actualiza el ciclo desde el maestro cuando existe.
+- La liberación guarda maquinaReal/moldeReal sin modificar la planeación original.
+- El registro de producción creado desde Calidad usa la máquina/molde reales.
+- Se conservan acumulado anterior, nueva producción en cero, supervisor y máximo 3 operadores.
+
+No requiere SQL. No modifica globals.css.
