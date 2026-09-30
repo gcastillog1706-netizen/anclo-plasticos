@@ -38,3 +38,13 @@
 
 /* Planeación: carga rápida + personal real */
 .quick-load{border:1px solid #cfd7d5;border-radius:12px;background:#f8faf9;padding:14px;margin-bottom:18px}.quick-load-head{display:flex;justify-content:space-between;gap:16px;align-items:center}.quick-load-head>div:first-child{display:flex;flex-direction:column;gap:3px}.quick-load-head>div:last-child{display:flex;gap:8px;flex-wrap:wrap}.file-btn{position:relative;overflow:hidden;display:inline-flex;align-items:center}.file-btn input{position:absolute;inset:0;opacity:0;cursor:pointer}.quick-grid-head,.quick-grid{display:grid;grid-template-columns:1fr 2fr 1fr 1.25fr;gap:8px;align-items:center}.quick-grid-head{font-size:12px;font-weight:800;margin-top:14px;padding:0 4px}.quick-grid{margin-top:6px}.quick-grid input,.quick-grid select{width:100%}.quick-actions{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}.personnel-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(430px,1fr));gap:12px}.personnel-card{border:1px solid #d8d8d2;border-radius:12px;padding:14px;background:#fff;display:grid;grid-template-columns:1.25fr .7fr 1.2fr 1.2fr;gap:12px}.personnel-card>div{display:flex;flex-direction:column;gap:3px}.personnel-card small,.personnel-card span{font-size:12px}.personnel-card strong{font-size:12px;color:#43515a}@media(max-width:900px){.quick-load-head{align-items:flex-start;flex-direction:column}.quick-grid-head{display:none}.quick-grid{grid-template-columns:1fr 1fr}.personnel-cards{grid-template-columns:1fr}.personnel-card{grid-template-columns:1fr 1fr}}
+/* Carga rápida V2: OP + configuración + material */
+.quick-table-wrap{overflow-x:auto;margin-top:12px;border:1px solid #d9ddd9;border-radius:10px;background:#fff}
+.quick-table{min-width:1650px;width:100%;border-collapse:collapse}
+.quick-table th{white-space:nowrap;background:#f0f1ed;font-size:12px;text-align:left;padding:8px}
+.quick-table td{vertical-align:top;padding:6px;border-top:1px solid #e7e8e3}
+.quick-table input,.quick-table select{width:100%;min-width:120px;box-sizing:border-box}
+.quick-table td:nth-child(5) select{min-width:320px}
+.quick-table td:nth-child(6) select{min-width:190px}
+.quick-pair{display:grid;grid-template-columns:90px 130px;gap:5px}
+.quick-triple{display:grid;grid-template-columns:120px 75px 120px;gap:5px}
