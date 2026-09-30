@@ -1,0 +1,16 @@
+PARCHE PLANEACION RAPIDA
+
+Reemplazar únicamente:
+- app/planeacion/page.tsx
+- app/globals.css
+
+Incluye:
+1. Personal / Turnos vuelve a mostrar las partidas del programa.
+2. Lee operadores y supervisores reales registrados en Producción y Calidad.
+3. Muestra turno(s), máquina, producto, OP y molde/descripción.
+4. Carga rápida para agregar varias OP de una sola vez.
+5. Importación de CSV/TSV exportado desde Excel con revisión antes de guardar.
+6. Descarga de plantilla compatible con Excel (CSV).
+7. No reinicia ni borra datos existentes.
+
+Nota: este parche no agrega una dependencia externa para leer archivos .xlsx binarios. Para importar desde Excel, guardar la hoja como CSV UTF-8 y cargarla.
