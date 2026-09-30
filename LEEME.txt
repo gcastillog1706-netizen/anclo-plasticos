@@ -1,9 +1,11 @@
-PARCHE VISUAL KPIs / INFORMES
+FIX CONSOLIDADO DE ESTILOS
 
-Corrige únicamente los estilos que se perdieron al aplicar el parche posterior de Calidad.
-No cambia cálculos, datos, Supabase ni la lógica de KPIs.
+Base: anclo-plasticos-main (5).zip
 
-Archivos:
-- app/globals.css
+Este parche restaura COMPLETO el app/globals.css de la base y agrega al final, sin sustituir estilos existentes:
+- estilos de KPIs semanales
+- estilos de Liberación rápida de Calidad
 
-Copiar reemplazando el archivo existente y desplegar en Vercel.
+No modifica datos, Supabase, SQL ni páginas TSX.
+
+Aplicación: copiar app/globals.css respetando la ruta y reemplazar el globals.css actualmente roto.
