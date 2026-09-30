@@ -1,14 +1,7 @@
-PARCHE PLANEACION RAPIDA V2
-Reemplaza únicamente:
-- app/planeacion/page.tsx
+PARCHE KPI SEMANAL
+Reemplazar únicamente:
+- app/kpis/page.tsx
 - app/globals.css
 
-Cambios:
-- Carga rápida incluye Molde + descripción y Máquina compatible.
-- Al seleccionar producto, solo muestra moldes de ese producto.
-- Al seleccionar molde, solo muestra máquinas compatibles.
-- Si Molde + Máquina son válidos, crea automáticamente la partida con ciclo, cavidades y pz/ciclo del maestro.
-- Material liberado por OP: virgen, reciclado y pigmento, cada uno con kg y lote.
-- CSV actualizado con OP, producto, configuración y material.
-- Si no se captura molde/máquina, la OP se guarda y se puede completar después sin inventar configuración.
-- Conserva Personal/Turnos y los cambios del parche anterior.
+Incluye: filtros por programa/semana/producto/máquina/OP/turno; producción Día vs Noche por día; todos los productos de la semana; producción por máquina; cumplimiento y rechazo; detalle semanal. Usa liberaciones válidas de Calidad y no genera datos ficticios.
+No requiere SQL.
