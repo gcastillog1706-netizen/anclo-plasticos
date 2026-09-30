@@ -25,11 +25,20 @@ export const realPiecesFor=(a:Allocation)=>{const qty=a.cantidad||0;return a.uni
 const hlrComponent=(producto:string)=>{
  const raw=(producto||'').toUpperCase().trim().replace(/\s+/g,' ');
  if(!raw.startsWith('HLR'))return null;
+ // HLR38 es la referencia de Sello aunque su clave no termine en -S.
+ if(/^HLR[-\s]?38$/.test(raw))return {base:'HLR38',component:'S'};
  if(/(?:-|\s)S$/.test(raw)||/S$/.test(raw))return {base:raw.replace(/(?:-|\s)?S$/,'').replace(/[\s-]+$/,''),component:'S'};
  if(/(?:-|\s)E$/.test(raw)||/E$/.test(raw))return {base:raw.replace(/(?:-|\s)?E$/,'').replace(/[\s-]+$/,''),component:'E'};
  return null;
 };
-const sharedHlrKey=(a:Allocation)=>{const h=hlrComponent(a.producto);return h&&a.maquina&&a.molde?`${a.maquina}||${a.molde}||${h.base}||${a.semana}`:null};
+const moldRunTokens=(molde:string)=>[...new Set((molde||'').toUpperCase().split('/').map(x=>x.trim()).filter(Boolean))];
+const sameHlrRun=(a:Allocation,b:Allocation)=>{
+ const ha=hlrComponent(a.producto),hb=hlrComponent(b.producto);
+ if(!ha||!hb||ha.base!==hb.base||ha.component===hb.component||!a.maquina||a.maquina!==b.maquina)return false;
+ const at=moldRunTokens(a.molde),bt=moldRunTokens(b.molde);
+ return at.some(x=>bt.includes(x));
+};
+const sharedHlrKey=(a:Allocation)=>{const h=hlrComponent(a.producto);if(!h||!a.maquina||!a.molde)return null;const tooling=moldRunTokens(a.molde).sort().join('/');return `${a.maquina}||${h.base}||${tooling}||${a.semana}`};
 
 export const scheduleAllocations=(allocations:Allocation[],program?:Program|null):ScheduleRow[]=>{
  const base=new Date(`${program?.fechaInicio||new Date().toISOString().slice(0,10)}T00:00:00`);
@@ -43,7 +52,9 @@ export const scheduleAllocations=(allocations:Allocation[],program?:Program|null
   const desired=a.inicioDeseado?new Date(a.inicioDeseado):new Date(base); if(!a.inicioDeseado) desired.setDate(desired.getDate()+weekOffset);
   const key=sharedHlrKey(a);
   const h=hlrComponent(a.producto);
-  const partners=key&&h?sorted.filter(x=>x.id!==a.id&&!handled.has(x.id)&&sharedHlrKey(x)===key&&hlrComponent(x.producto)?.component!==h.component&&capacityFor(x)>0&&!!x.cantidad):[];
+  // Sello y Empaque HLR pueden compartir corrida cuando comparten máquina y al menos
+  // un herramental común (ej. ME-01A/ME-06 + ME-01B/ME-06). No se fuerza al siguiente hueco.
+  const partners=h?sorted.filter(x=>x.id!==a.id&&!handled.has(x.id)&&sameHlrRun(a,x)&&capacityFor(x)>0&&!!x.cantidad):[];
   const group=[a,...partners];
   const q=queues.get(a.maquina); const start=q&&q>desired?new Date(q):desired;
   let machineEnd=start;

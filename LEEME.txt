@@ -1,16 +1,16 @@
-PARCHE: Maestro de Productos + nueva producción en cero
+PARCHE PLANEACIÓN — INICIO PROGRAMADO + CORRIDAS HLR
 
-Archivos modificados/nuevos:
-- components/Sidebar.tsx
-- app/productos/page.tsx
-- lib/products.ts
-- app/moldes/page.tsx
-- app/calidad/page.tsx
+Archivos modificados:
+- app/planeacion/page.tsx
+- lib/operations.ts
 
 Cambios:
-1) Nuevo maestro Productos. Importa automáticamente las claves ya existentes del maestro de procesos.
-2) Moldes/Herramientas: Producto deja de ser texto libre. Solo permite seleccionar productos activos registrados.
-3) Calidad / Liberación rápida: cada NUEVA captura de producción inicia en 0. Se muestra por separado el acumulado anterior aceptado y la nueva producción se suma al historial al liberar.
-4) Se conservan hasta 3 operadores por registro y supervisor diario.
+1. Carga rápida / Excel agrega Inicio programado (fecha + hora).
+2. La plantilla CSV incluye INICIO_PROGRAMADO.
+3. Si Inicio programado queda vacío, se conserva el cálculo automático del primer espacio disponible.
+4. HLR Sello + Empaque de la misma medida pueden compartir exactamente el mismo horario cuando están en la misma máquina y comparten al menos un herramental de la corrida.
+   Ejemplo: ME-01A/ME-06 + ME-01B/ME-06 comparten ME-06.
+5. La corrida compartida ocupa una sola ventana de máquina; no suma las dos duraciones consecutivamente.
+6. HLR38 se reconoce como Sello aunque su clave no termine en -S.
 
-No incluye globals.css y no requiere SQL.
+No requiere SQL. No modifica globals.css.
