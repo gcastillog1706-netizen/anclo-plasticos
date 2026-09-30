@@ -1,7 +1,23 @@
-PARCHE KPI SEMANAL
-Reemplazar únicamente:
-- app/kpis/page.tsx
+PARCHE ANCLO PLÁSTICOS — CALIDAD / LIBERACIÓN RÁPIDA POR TURNO
+
+Base: anclo-plasticos-main (5).zip
+
+Archivos modificados:
+- app/calidad/page.tsx
 - app/globals.css
 
-Incluye: filtros por programa/semana/producto/máquina/OP/turno; producción Día vs Noche por día; todos los productos de la semana; producción por máquina; cumplimiento y rechazo; detalle semanal. Usa liberaciones válidas de Calidad y no genera datos ficticios.
-No requiere SQL.
+Cambios:
+- Nueva pestaña "Liberación rápida por turno" junto a "Captura individual".
+- Precarga Máquina, OP/Folio, Producto, Molde, Cavidades, piezas, lote y ciclo desde Planeación/Producción.
+- Hasta 3 operadores reales por cada registro/máquina.
+- Supervisor se captura una sola vez por fecha en turno Día y se reutiliza en turno Noche.
+- Filtros por fecha, turno, máquina y producto.
+- Seleccionar todo / Deseleccionar todo.
+- PASA / NO PASA por fila, aceptadas, rechazadas y observaciones.
+- Liberación masiva genera registros individuales CAL y actualiza Producción/Calidad.
+- La captura individual existente se conserva.
+
+No requiere cambios SQL.
+
+Nota de validación:
+El proyecto fuente no incluye node_modules, por lo que no fue posible ejecutar una compilación completa local. La comprobación TypeScript intenta resolver dependencias React/Next y falla por dependencias ausentes antes de poder validar el proyecto completo.
