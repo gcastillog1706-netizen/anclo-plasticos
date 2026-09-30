@@ -1,6 +1,6 @@
 export type QualityResult='PASA'|'NO PASA';
 export type QualityRelease={
- id:string;productionId:string;allocationId:string;orderId:string;fecha:string;fechaProduccion?:string;turno?:'DÍA'|'NOCHE';resultado:QualityResult;
+ id:string;productionId:string;allocationId:string;orderId:string;fecha:string;fechaProduccion?:string;horaProduccion?:string;turno?:'DÍA'|'NOCHE';resultado:QualityResult;
  piezasReportadas:number;piezasAceptadas:number;piezasRechazadas:number;operadores:string[];supervisores?:string[];responsable:string;observaciones:string;pdfFolio:string;
  maquinaPlaneada?:string;moldePlaneado?:string;maquinaReal?:string;moldeReal?:string;cavidadesReales?:number|null;cicloReal?:number|null;lote?:string;
  estado?:'ACTIVA'|'ANULADA';revision?:number;actualizadoAt?:string;motivoAnulacion?:string
@@ -14,7 +14,7 @@ export const acceptedForAllocation=(allocationId:string,releases:QualityRelease[
 export const qualityPdfLines=(r:QualityRelease,ctx?:{producto?:string;op?:string})=>[
  `Folio: ${r.pdfFolio}${(r.revision||0)>0?` · Rev. ${String(r.revision).padStart(2,'0')}`:''}`,
  `Fecha liberación: ${new Date(r.fecha).toLocaleString('es-MX')}`,
- `Fecha producción: ${r.fechaProduccion||'--'} · Turno: ${r.turno||'--'}`,
+ `Fecha producción: ${r.fechaProduccion||'--'} ${r.horaProduccion||'--'} · Turno: ${r.turno||'--'}`,
  `Resultado: ${r.estado==='ANULADA'?'ANULADA':r.resultado}`,
  `OP / Folio: ${ctx?.op||'--'}`,
  `Producto: ${ctx?.producto||'--'}`,
