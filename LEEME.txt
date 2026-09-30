@@ -1,16 +1,15 @@
-PARCHE PLANEACIÓN — INICIO PROGRAMADO + CORRIDAS HLR
-
-Archivos modificados:
-- app/planeacion/page.tsx
-- lib/operations.ts
+PARCHE CALIDAD - LIBERACION RAPIDA
 
 Cambios:
-1. Carga rápida / Excel agrega Inicio programado (fecha + hora).
-2. La plantilla CSV incluye INICIO_PROGRAMADO.
-3. Si Inicio programado queda vacío, se conserva el cálculo automático del primer espacio disponible.
-4. HLR Sello + Empaque de la misma medida pueden compartir exactamente el mismo horario cuando están en la misma máquina y comparten al menos un herramental de la corrida.
-   Ejemplo: ME-01A/ME-06 + ME-01B/ME-06 comparten ME-06.
-5. La corrida compartida ocupa una sola ventana de máquina; no suma las dos duraciones consecutivamente.
-6. HLR38 se reconoce como Sello aunque su clave no termine en -S.
+- Una sola fila por partida activa en Liberacion rapida.
+- Si hay varios registros previos de la misma partida, ya no aparecen duplicados.
+- Acum. anterior se obtiene de las piezas aceptadas historicas de la partida.
+- Nueva produccion inicia siempre en 0/vacio.
+- Cada nueva captura crea un registro de produccion nuevo; no sobrescribe una produccion anterior.
+- Molde / Herramental muestra numero de molde y debajo la descripcion disponible del maestro/configuracion.
+- Se conservan hasta 3 operadores y supervisor diario.
 
-No requiere SQL. No modifica globals.css.
+Archivos a reemplazar:
+- app/calidad/page.tsx
+
+No requiere SQL.
