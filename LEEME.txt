@@ -1,23 +1,9 @@
-PARCHE ANCLO PLÁSTICOS — CALIDAD / LIBERACIÓN RÁPIDA POR TURNO
+PARCHE VISUAL KPIs / INFORMES
 
-Base: anclo-plasticos-main (5).zip
+Corrige únicamente los estilos que se perdieron al aplicar el parche posterior de Calidad.
+No cambia cálculos, datos, Supabase ni la lógica de KPIs.
 
-Archivos modificados:
-- app/calidad/page.tsx
+Archivos:
 - app/globals.css
 
-Cambios:
-- Nueva pestaña "Liberación rápida por turno" junto a "Captura individual".
-- Precarga Máquina, OP/Folio, Producto, Molde, Cavidades, piezas, lote y ciclo desde Planeación/Producción.
-- Hasta 3 operadores reales por cada registro/máquina.
-- Supervisor se captura una sola vez por fecha en turno Día y se reutiliza en turno Noche.
-- Filtros por fecha, turno, máquina y producto.
-- Seleccionar todo / Deseleccionar todo.
-- PASA / NO PASA por fila, aceptadas, rechazadas y observaciones.
-- Liberación masiva genera registros individuales CAL y actualiza Producción/Calidad.
-- La captura individual existente se conserva.
-
-No requiere cambios SQL.
-
-Nota de validación:
-El proyecto fuente no incluye node_modules, por lo que no fue posible ejecutar una compilación completa local. La comprobación TypeScript intenta resolver dependencias React/Next y falla por dependencias ausentes antes de poder validar el proyecto completo.
+Copiar reemplazando el archivo existente y desplegar en Vercel.
