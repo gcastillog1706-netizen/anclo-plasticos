@@ -1,5 +1,5 @@
 import Link from 'next/link';
 const links=[['/','Inicio / Monitoreo'],['/planeacion','Planeación'],['/historial','Historial semanal'],['/produccion','Producción Día / Noche'],['/incidencias','Incidencias'],['/concentrado','Concentrado diario'],['/reportes','Reportes / Descargas'],['/kpis','KPIs / Informes']];
 const quality=[['/calidad','Calidad / Liberaciones'],['/calidad/tension','Estudios de tensión'],['/calidad/historial','Historial de calidad']];
-const masters=[['/moldes','Moldes / Herramientas'],['/maquinas','Máquinas'],['/personal','Personal']];
+const masters=[['/productos','Productos'],['/moldes','Moldes / Herramientas'],['/maquinas','Máquinas'],['/personal','Personal']];
 export default function Sidebar(){return <aside className="sidebar"><div className="brand">ANCLO PLÁSTICOS</div><div className="sub">Producción + Calidad</div><nav className="nav">{links.map(([h,l])=><Link key={h} href={h}>{l}</Link>)}<div className="nav-group">CALIDAD</div>{quality.map(([h,l])=><Link key={h} href={h}>{l}</Link>)}<div className="nav-group">MAESTROS</div>{masters.map(([h,l])=><Link key={h} href={h}>{l}</Link>)}</nav></aside>}

@@ -1,11 +1,16 @@
-FIX CONSOLIDADO DE ESTILOS
+PARCHE: Maestro de Productos + nueva producción en cero
 
-Base: anclo-plasticos-main (5).zip
+Archivos modificados/nuevos:
+- components/Sidebar.tsx
+- app/productos/page.tsx
+- lib/products.ts
+- app/moldes/page.tsx
+- app/calidad/page.tsx
 
-Este parche restaura COMPLETO el app/globals.css de la base y agrega al final, sin sustituir estilos existentes:
-- estilos de KPIs semanales
-- estilos de Liberación rápida de Calidad
+Cambios:
+1) Nuevo maestro Productos. Importa automáticamente las claves ya existentes del maestro de procesos.
+2) Moldes/Herramientas: Producto deja de ser texto libre. Solo permite seleccionar productos activos registrados.
+3) Calidad / Liberación rápida: cada NUEVA captura de producción inicia en 0. Se muestra por separado el acumulado anterior aceptado y la nueva producción se suma al historial al liberar.
+4) Se conservan hasta 3 operadores por registro y supervisor diario.
 
-No modifica datos, Supabase, SQL ni páginas TSX.
-
-Aplicación: copiar app/globals.css respetando la ruta y reemplazar el globals.css actualmente roto.
+No incluye globals.css y no requiere SQL.
