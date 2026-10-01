@@ -27,11 +27,22 @@ export default function PersistenceGate({children}:{children:React.ReactNode}){
    const cloud=(data||[]) as CloudRow[];
    const meaningful=(raw:string|null)=>{if(!raw)return false;try{const v=JSON.parse(raw);if(Array.isArray(v))return v.length>0;if(v&&typeof v==='object')return Object.keys(v).length>0;return v!==null&&v!==''}catch{return raw.trim().length>0}};
    if(cloud.length){
-    // FUSIÓN SEGURA: jamás sustituir una captura local con una copia vacía/antigua de nube.
-    // Si este navegador ya tiene datos reales, se conservan y se suben. Si está vacío, restaura nube.
+    // NUBE AUTORITATIVA EN ARRANQUE. Un navegador parcial JAMÁS sobrescribe la copia de Supabase.
+    // Antes de restaurar guardamos una copia local de emergencia por si se requiere auditoría manual.
     const byKey=new Map(cloud.filter(r=>isManaged(r.clave)).map(r=>[r.clave,r]));
     const keys=new Set([...managed(),...byKey.keys()]);
-    for(const k of keys){const local=localStorage.getItem(k),remote=byKey.get(k);if(meaningful(local)){await upsert(k,local!)}else if(remote){localStorage.setItem(k,JSON.stringify(remote.valor))}}
+    for(const k of keys){
+     const local=localStorage.getItem(k),remote=byKey.get(k);
+     if(remote){
+      if(meaningful(local)&&local!==JSON.stringify(remote.valor)){
+       try{localStorage.setItem(`anclo-recovery-backup-${Date.now()}-${k}`,local!)}catch{}
+      }
+      localStorage.setItem(k,JSON.stringify(remote.valor));
+     }else if(meaningful(local)){
+      // Sólo se crea en nube cuando esa clave todavía no existe allí.
+      await upsert(k,local!);
+     }
+    }
    }else{
     // Primera activación: migra automáticamente todo lo que exista en ESTE navegador a Supabase.
     for(const [k,v] of Object.entries(localMap()))if(meaningful(v))await upsert(k,v);
