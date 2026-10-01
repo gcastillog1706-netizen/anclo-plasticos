@@ -3,14 +3,14 @@ export type QualityRelease={
  id:string;productionId:string;allocationId:string;orderId:string;fecha:string;fechaProduccion?:string;horaProduccion?:string;turno?:'DÍA'|'NOCHE';resultado:QualityResult;
  piezasReportadas:number;piezasAceptadas:number;piezasRechazadas:number;operadores:string[];supervisores?:string[];responsable:string;observaciones:string;pdfFolio:string;
  maquinaPlaneada?:string;moldePlaneado?:string;maquinaReal?:string;moldeReal?:string;cavidadesReales?:number|null;cicloReal?:number|null;lote?:string;
- estado?:'ACTIVA'|'ANULADA';revision?:number;actualizadoAt?:string;motivoAnulacion?:string
+ unidadCaptura?:'PIEZAS'|'BOLSAS';estado?:'ACTIVA'|'ANULADA';revision?:number;actualizadoAt?:string;motivoAnulacion?:string
 };
 export type TensionSample={numero:number;fuerzaN:number;resultado:'PASA'|'NO PASA';cavidad?:number;observaciones?:string};
 export type TensionStudy={id:string;allocationId?:string;orderId?:string;productionId?:string;folio:string;producto:string;productoVercel?:string;destino?:'SUCURSAL'|'HOME DEPOT';color?:'Transparente'|'Negro';lote:string;maquina:string;molde:string;cavidades:number;cantidad:number;virgenPct:number;molidoPct:number;operadores:string[];coordinador:string;fecha:string;fechaFabricacion?:string;semanaProduccion?:number;fuerzaMinN:number;fuerzaKgf?:number;tamanoNominalMm?:number;largoAMm?:number;anchoBMm?:number;espesorCMm?:number;diametroAtadoEMm?:number;codigoMuestreo?:string;tamanoMuestra?:number;aceptar?:number;rechazar?:number;bolsas?:string;muestras:TensionSample[];estado:'EN CAPTURA'|'TERMINADO';observaciones:string};
 export const QUALITY_KEYS={releases:'anclo-quality-releases-v1',tension:'anclo-tension-studies-v1'};
 export const qread=<T,>(key:string,fallback:T):T=>{if(typeof window==='undefined')return fallback;try{return JSON.parse(localStorage.getItem(key)||'') as T}catch{return fallback}};
 export const qwrite=(key:string,value:unknown)=>{localStorage.setItem(key,JSON.stringify(value));window.dispatchEvent(new Event('anclo-operations-updated'))};
-export const acceptedForAllocation=(allocationId:string,releases:QualityRelease[])=>releases.filter(r=>r.allocationId===allocationId&&r.resultado==='PASA'&&r.estado!=='ANULADA').reduce((n,r)=>n+(r.piezasAceptadas||0),0);
+export const acceptedForAllocation=(allocationId:string,releases:QualityRelease[],product?:string)=>releases.filter(r=>r.allocationId===allocationId&&r.resultado==='PASA'&&r.estado!=='ANULADA').reduce((n,r)=>n+((product&&/^(ACN|ACT)\d/i.test(product)&&!r.unidadCaptura)?(r.piezasAceptadas||0)*100:(r.piezasAceptadas||0)),0);
 export const qualityPdfLines=(r:QualityRelease,ctx?:{producto?:string;op?:string})=>[
  `Folio: ${r.pdfFolio}${(r.revision||0)>0?` · Rev. ${String(r.revision).padStart(2,'0')}`:''}`,
  `Fecha liberación: ${new Date(r.fecha).toLocaleString('es-MX')}`,
